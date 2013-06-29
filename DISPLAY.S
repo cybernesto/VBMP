@@ -1,3 +1,8 @@
+***********************
+* Apple II BMP Viewer *
+* Arnaud Coqui}re     *
+* Mario Patino        *
+***********************
 
           LST OFF
           ORG $1000
@@ -57,6 +62,11 @@ SAVEDST   LDY DESTY
           LDA BUFFDST
           LSR            ; DERNIER DECALLAGE POUR 7EMEBIT
           STA (MEM),Y
+          BIT $C01C
+          BPL PAGE2
+          BIT $C054
+          JMP S2
+PAGE2     BIT $C055
           INY
           CPY #40
           BNE S2
@@ -64,7 +74,8 @@ SAVEDST   LDY DESTY
           CPX #$FF
           BEQ FIN
           STX DESTX
-          JSR READBMP    ; SAUTE 1 OCTET DANS BMP
+          JSR READBMP    ; SAUTE 2 OCTETS DANS BMP
+          JSR READBMP
           LDY #00
 S2        STY DESTY
           LDA #06
@@ -74,8 +85,11 @@ S2        STY DESTY
 
 DEBUT     BIT $C050
           BIT $C052
-          BIT $C054
           BIT $C057
+          BIT $C05E
+          STA $C00D
+          STA $C001
+          BIT $C055
 
           SEC
           JSR $FE1F      ; TEST GS (THX A.V.)
