@@ -16,6 +16,7 @@ DESTY     EQU $1B
 DESTX     EQU $1C
 BUFFBMP   EQU $1D
 BUFFDST   EQU $1E
+DHGR      EQU $1F
 
 
 SOURCE    EQU $4000
@@ -62,36 +63,54 @@ SAVEDST   LDY DESTY
           LDA BUFFDST
           LSR            ; DERNIER DECALLAGE POUR 7EMEBIT
           STA (MEM),Y
+          LDA DHGR
+          BEQ HGR
           BIT $C01C
           BPL PAGE2
           BIT $C054
           JMP S2
 PAGE2     BIT $C055
-          INY
+HGR       INY
           CPY #40
           BNE S2
           DEX
           CPX #$FF
           BEQ FIN
           STX DESTX
-          JSR READBMP    ; SAUTE 2 OCTETS DANS BMP
+          JSR READBMP    ; SAUTE DES OCTETS DANS BMP
+          LDA DHGR
+          BEQ FILLD
           JSR READBMP
-          LDY #00
+FILLD     LDY #00
 S2        STY DESTY
           LDA #06
           STA COMPTD
           RTS
+FIN       JMP END
 
 
-DEBUT     BIT $C050
-          BIT $C052
-          BIT $C057
-          BIT $C05E
-          STA $C00D
-          STA $C001
-          BIT $C055
+DEBUT     BIT $C050      ; GRAPHIQUES
+          BIT $C052      ; PLEIN G.
+          BIT $C057      ; HAUTE RESOLUTION
+          BIT $C054      ; PAGE1
 
-          SEC
+          LDA #00
+          STA DHGR
+          LDA SOURCE+$0E
+          CMP #$18
+          BNE DHGRINI
+          LDA SOURCE+$0F
+          CMP #$01
+          BNE DHGRINI
+          JMP GSTEST
+DHGRINI   BIT $C05E      ; DOUBLE HR
+          STA $C00D      ; 80 COLONNES
+          STA $C001      ; SET80STORE
+          BIT $C055      ; PAGE2
+          LDA #01
+          STA DHGR
+
+GSTEST    SEC
           JSR $FE1F      ; TEST GS (THX A.V.)
           BCS GO1
 
@@ -129,7 +148,7 @@ S3        DEC COMPTD     ; 7 ROTATIONS
           JSR SAVEDST
 S4        JMP BP
 
-FIN       PLA
+END       PLA
           PLA
           STA $C010
 BF        LDA $C000
