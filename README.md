@@ -6,11 +6,12 @@ BMP Viewer for the Apple II
 Introduction
 ============
 This project is based on the work of Arnaud Cocquière and his hommage to Steve Jobs.
-http://www.ctrl-pomme-reset.fr/2011/10/11/hommage/
+
+<http://www.ctrl-pomme-reset.fr/2011/10/11/hommage/>
 
 Unlike most images shown on the Apple II, the image displayed is actually a BMP file 
 without additional conversion. The disk includes the sources for the BMP viewer, so I
-decided to study it and learn a bit of 6502 assemmbly and graphics programming on the
+decided to study it and learn a bit of 6502 assembly and graphics programming on the
 Apple II.
 Since my Apple IIc supports DHGR graphics I started playing with it to add support to
 16 color BMPs and monochrome pictures in Double High-Res. I thought this could be useful
@@ -29,11 +30,10 @@ BRUN DISPLAY
 Supported formats
 =================
 The viewer supports BMP Images with the following resolutions and color depths
-Monochrome (1bit color depth) 280 x 192 px
-Monochrome (1bit color depth) 560 x 192 px
-16 Color (4bit color depth) 140 x 192 px
+* Monochrome (1bit color depth) 280 x 192 px
+* Monochrome (1bit color depth) 560 x 192 px
+* 16 Color (4bit color depth) 140 x 192 px
 The formats are automatically detected based on the horizontal resolution. Using different
 formats as the ones listed may lead to unexpected results since the format check has been
 kept as simple as possible.
-
 
