@@ -69,7 +69,6 @@ SAVEDST   LDY DESTY
 S2        STY DESTY
           LDA #06
           STA COMPTD
-          STA BUFFDST
           RTS
 
 
@@ -102,8 +101,8 @@ GO1       LDA SOURCE+6
           STA DESTY
           LDX #191
           STX DESTX
-          LDA #07
-          STA COMPTS
+          LDA #06
+          STA COMPTD
           JSR READBMP
 
 BP        ASL BUFFBMP
