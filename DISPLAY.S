@@ -98,14 +98,22 @@ DEBUT     BIT $C050      ; GRAPHIQUES
           STA DHGR
           LDA SOURCE+$0E
           CMP #$18
-          BNE DHGRINI
-          LDA SOURCE+$0F
-          CMP #$01
-          BNE DHGRINI
-          JMP GSTEST
-DHGRINI   BIT $C05E      ; DOUBLE HR
-          STA $C00D      ; 80 COLONNES
-          STA $C001      ; SET80STORE
+          BEQ GSTEST
+
+          STA $C00C
+          BIT $C05E      ; DOUBLE HR
+          STA $C05F
+          STA $C05E
+          STA $C05F
+          STA $C00D
+          STA $C05E
+          CMP #$30
+          BEQ MONO
+          STA $C05F
+          STA $C05E
+          STA $C05F
+          STA $C05E
+MONO      STA $C001      ; SET80STORE
           BIT $C055      ; PAGE2
           LDA #01
           STA DHGR
