@@ -96,7 +96,7 @@ DEBUT     BIT $C050      ; GRAPHIQUES
 
           LDA #00
           STA DHGR
-          LDA SOURCE+$0E
+          LDA SOURCE+$12
           CMP #$18
           BEQ GSTEST
 
@@ -129,10 +129,7 @@ GSTEST    SEC
           AND #$F0
           STA $C034      ; BORDURE NOIRE
 
-GO1       LDA SOURCE+6
-          SEC
-          SBC #4
-          CLC
+GO1       LDA SOURCE+$0A
           ADC OFFSET+1
           STA OFFSET+1
 
@@ -162,5 +159,9 @@ END       PLA
 BF        LDA $C000
           BPL BF
           STA $C010
+          STA $C000
+          STA $C00C
+          BIT $C053
+          BIT $C054
           BIT $C051
           RTS
