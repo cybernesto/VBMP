@@ -24,25 +24,21 @@ SOURCE    EQU $4000
           JMP DEBUT
 
 CALC      TXA            ; CALCUL ADRESSE LIGNE (X) HIRES
-          AND #$C0
+          ASL
+          TAY
+          AND #$F0
+          BPL C1
+          ORA #$05
+C1        BCC C2
+          ORA #$0A
+C2        ASL
+          ASL
           STA MEM
-          LSR
-          LSR
-          ORA MEM
-          STA MEM
-          TXA
-          STA MEM+1
-          ASL
-          ASL
-          ASL
-          ROL MEM+1
-          ASL
-          ROL MEM+1
-          ASL
-          ROR MEM
-          LDA MEM+1
-          AND #$1F
-          ORA #$20
+          TYA
+          AND #$0E
+          ADC #$10
+          ASL MEM
+          ROL
           STA MEM+1
           RTS
 
@@ -57,9 +53,9 @@ S1        STY SRCY
           STA COMPTS
           RTS
 
-SAVEDST   LDY DESTY
-          LDX DESTX
+SAVEDST   LDX DESTX
           JSR CALC
+          LDY DESTY
           LDA BUFFDST
           LSR            ; DERNIER DECALLAGE POUR 7EMEBIT
           STA (MEM),Y
