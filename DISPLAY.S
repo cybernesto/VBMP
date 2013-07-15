@@ -1,6 +1,6 @@
 ***********************
 * Apple II BMP Viewer *
-* Arnaud Coqui}re     *
+* Arnaud Cocqui}re    *
 * Mario Patino        *
 ***********************
 
@@ -53,36 +53,6 @@ S1        STY SRCY
           STA COMPTS
           RTS
 
-SAVEDST   LDX DESTX
-          JSR CALC
-          LDY DESTY
-          LDA BUFFDST
-          LSR            ; DERNIER DECALLAGE POUR 7EMEBIT
-          STA (MEM),Y
-          LDA DHGR
-          BEQ HGR
-          BIT $C01C
-          BPL PAGE2
-          BIT $C054
-          JMP S2
-PAGE2     BIT $C055
-HGR       INY
-          CPY #40
-          BNE S2
-          DEX
-          CPX #$FF
-          BEQ FIN
-          STX DESTX
-          JSR READBMP    ; SAUTE DES OCTETS DANS BMP
-          LDA DHGR
-          BEQ FILLD
-          JSR READBMP
-FILLD     LDY #00
-S2        STY DESTY
-          LDA #06
-          STA COMPTD
-          RTS
-FIN       JMP END
 
 
 DEBUT     BIT $C050      ; GRAPHIQUES
@@ -134,6 +104,7 @@ GO1       LDA SOURCE+$0A
           STA SRCY
           STA DESTY
           LDX #191
+          JSR CALC
           STX DESTX
           LDA #06
           STA COMPTD
@@ -145,13 +116,37 @@ BP        ASL BUFFBMP
           BPL S3
           JSR READBMP
 S3        DEC COMPTD     ; 7 ROTATIONS
-          BPL S4
-          JSR SAVEDST
-S4        JMP BP
+          BPL BP
+          LDY DESTY
+          LDA BUFFDST
+          LSR            ; DERNIER DECALLAGE POUR 7EMEBIT
+          STA (MEM),Y
+          LDA DHGR
+          BEQ HGR
+          BIT $C01C
+          BPL PAGE2
+          BIT $C054
+          JMP S2
+PAGE2     BIT $C055
+HGR       INY
+          CPY #40
+          BNE S2
+          DEX
+          CPX #$FF
+          BEQ FIN
+          JSR CALC
+          STX DESTX
+          JSR READBMP    ; SAUTE DES OCTETS DANS BMP
+          LDA DHGR
+          BEQ FILLD
+          JSR READBMP
+FILLD     LDY #00
+S2        STY DESTY
+          LDA #06
+          STA COMPTD
+          JMP BP
 
-END       PLA
-          PLA
-          STA $C010
+FIN       STA $C010
 BF        LDA $C000
           BPL BF
           STA $C010
