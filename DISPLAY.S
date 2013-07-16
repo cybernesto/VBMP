@@ -96,6 +96,7 @@ GSTEST    SEC
           STA $C034      ; BORDURE NOIRE
 
 GO1       LDA SOURCE+$0A
+          CLC
           ADC OFFSET+1
           STA OFFSET+1
 
