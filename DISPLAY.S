@@ -18,6 +18,7 @@ BUFFBMP   EQU $1D
 BUFFDST   EQU $1E
 DHGR      EQU $1F
 
+PRODOS    EQU 1
 
 SOURCE    EQU $4000
 
@@ -62,7 +63,13 @@ DEBUT     BIT $C050      ; GRAPHIQUES
 
           LDA #00
           STA DHGR
+
+          DO PRODOS
           LDA SOURCE+$12
+          ELSE
+          LDA SOURCE+$0E
+          FIN
+
           CMP #$18
           BEQ GSTEST
 
@@ -73,6 +80,7 @@ DEBUT     BIT $C050      ; GRAPHIQUES
           STA $C05F
           STA $C00D
           STA $C05E
+
           CMP #$30
           BEQ MONO
           STA $C05F
@@ -95,7 +103,13 @@ GSTEST    SEC
           AND #$F0
           STA $C034      ; BORDURE NOIRE
 
+          DO PRODOS
 GO1       LDA SOURCE+$0A
+          ELSE
+GO1       LDA SOURCE+$06 ; DOS3.3 FICHIER
+          SEC
+          SBC #4
+          FIN
           CLC
           ADC OFFSET+1
           STA OFFSET+1
@@ -147,13 +161,6 @@ S2        STY DESTY
           STA COMPTD
           JMP BP
 
-FIN       STA $C010
-BF        LDA $C000
-          BPL BF
-          STA $C010
-          STA $C000
-          STA $C00C
-          BIT $C053
+FIN       STA $C000
           BIT $C054
-          BIT $C051
           RTS
