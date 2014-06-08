@@ -60,6 +60,8 @@ DEBUT     BIT $C050      ; GRAPHIQUES
           BIT $C052      ; PLEIN G.
           BIT $C057      ; HAUTE RESOLUTION
           BIT $C054      ; PAGE1
+          BIT $C00C      ; 40 COL.
+          BIT $C05F      ; CLEAR DHGR
 
           LDA #00
           STA DHGR
